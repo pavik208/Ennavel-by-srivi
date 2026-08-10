@@ -51,6 +51,8 @@ function buildWhatsAppUrl(product, details = {}) {
 
   if (details.name) lines.push(`Name: ${details.name}`);
   if (details.address) lines.push(`Address: ${details.address}`);
+  if (details.state) lines.push(`State: ${details.state}`);
+  if (details.pincode) lines.push(`Pincode: ${details.pincode}`);
   if (details.phone) lines.push(`Phone: ${details.phone}`);
   if (details.size) lines.push(`Size: ${details.size}`);
   if (details.card) lines.push(`Card: ${details.card}`);
