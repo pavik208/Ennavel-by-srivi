@@ -2,7 +2,7 @@ const defaultProduct = {
   title: 'Signature Layer Set',
   price: '₹1,499',
   description: 'Premium layering with a polished, effortless finish.',
-  image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
+  image: 'Image/Scanner.jpeg',
   tag: 'Best Seller'
 };
 
@@ -202,10 +202,14 @@ function attachEventHandlers() {
   }
 
   if (page === 'payment.html' || page === 'payment') {
-    const totalAmount = localStorage.getItem('checkoutTotal') || '';
+    const checkoutOrder = loadCheckoutOrder();
+    const totalAmount = checkoutOrder?.totalAmount || localStorage.getItem('checkoutTotal') || '';
+    const shippingCharge = checkoutOrder?.shippingCharge || 60;
 
     document.getElementById('paymentTitle').textContent = product.title;
     document.getElementById('paymentPrice').textContent = product.price;
+    document.getElementById('paymentShipping').textContent = formatIndianPrice(shippingCharge);
+    document.getElementById('paymentTotal').textContent = formatIndianPrice(Number(totalAmount) || 0);
     const payImg = document.getElementById('paymentImage');
     if (payImg) {
       payImg.src = product.image || defaultProduct.image;
