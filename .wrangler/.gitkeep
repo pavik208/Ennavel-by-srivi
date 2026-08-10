@@ -1,0 +1,2 @@
+This file preserves the .wrangler directory in git.
+Create real wrangler state locally as needed; remove this file if not required.
