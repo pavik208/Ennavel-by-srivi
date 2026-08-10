@@ -20,7 +20,7 @@ function extractProductFromCard(card) {
 
 function buildWhatsAppUrl(product, details = {}) {
   const lines = [
-    'New order from Ennavel By Sirvi',
+    'New order from Ennaval by srivi',
     `Product: ${product.title}`,
     `Price: ${product.price}`,
     `Description: ${product.description}`
@@ -57,7 +57,7 @@ if (form && message) {
     const data = new FormData(form);
     const name = data.get('name')?.toString().trim() || 'there';
 
-    message.textContent = `Thanks, ${name}! You're on the list for Ennavel By Sirvi.`;
+    message.textContent = `Thanks, ${name}! You're on the list for Ennaval by srivi.`;
     form.reset();
   });
 }

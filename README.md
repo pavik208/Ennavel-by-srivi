@@ -1,4 +1,4 @@
-# Ennavel By Sirvi
+# Ennaval by srivi
 
 This project is a static storefront built for GitHub Pages.
 
