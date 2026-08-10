@@ -134,9 +134,10 @@ function attachEventHandlers() {
     localStorage.setItem('selectedProduct', JSON.stringify(product));
   }
 
-  const page = window.location.pathname.split('/').pop();
+  let page = window.location.pathname.split('/').pop();
+  if (!page) page = 'index.html';
 
-  if (page === 'product.html') {
+  if (page === 'product.html' || page === 'product') {
     document.getElementById('detailTitle').textContent = product.title;
     document.getElementById('detailDesc').textContent = product.description;
     document.getElementById('detailPrice').textContent = product.price;
@@ -156,7 +157,7 @@ function attachEventHandlers() {
     });
   }
 
-  if (page === 'checkout.html') {
+  if (page === 'checkout.html' || page === 'checkout') {
     const shippingCharge = 60;
     const productAmount = parseIndianPrice(product.price);
     const totalAmount = productAmount + shippingCharge;
@@ -200,7 +201,7 @@ function attachEventHandlers() {
     });
   }
 
-  if (page === 'payment.html') {
+  if (page === 'payment.html' || page === 'payment') {
     const totalAmount = localStorage.getItem('checkoutTotal') || '';
 
     document.getElementById('paymentTitle').textContent = product.title;
