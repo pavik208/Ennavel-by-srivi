@@ -2,7 +2,7 @@ const defaultProduct = {
   title: 'Signature Layer Set',
   price: '₹1,499',
   description: 'Premium layering with a polished, effortless finish.',
-  image: 'Image/Scanner.jpeg',
+  image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
   tag: 'Best Seller'
 };
 
@@ -13,7 +13,20 @@ function extractProductFromCard(card) {
   const description = card.querySelector('p')?.textContent.trim() || defaultProduct.description;
   const price = card.querySelector('.price')?.textContent.trim() || defaultProduct.price;
   const tag = card.querySelector('.pill')?.textContent.trim() || defaultProduct.tag;
-  const image = defaultProduct.image;
+  // Try to extract an <img> inside the card first
+  let image = defaultProduct.image;
+  const imgEl = card.querySelector('img');
+  if (imgEl && imgEl.src) {
+    image = imgEl.src;
+  } else {
+    // Fallback: read background-image from .product-img if present
+    const bgEl = card.querySelector('.product-img');
+    if (bgEl) {
+      const bg = window.getComputedStyle(bgEl).backgroundImage || '';
+      const match = bg.match(/url\(["']?(.*?)["']?\)/);
+      if (match && match[1]) image = match[1];
+    }
+  }
 
   return { title, description, price, tag, image };
 }
