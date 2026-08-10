@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout | Ennavel By Sirvi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-body">
+      <div class="page-shell">
+        <a class="back-link" href="product.html">← Back to product</a>
+        <div class="checkout-card">
+          <img id="checkoutImage" class="detail-visual" src="" alt="Selected product" />
+          <div>
+            <p class="eyebrow">Checkout</p>
+            <h1 id="checkoutTitle">Product</h1>
+            <div class="price-row">
+              <span class="price-tag" id="checkoutPrice">₹0</span>
+              <span>Secure payment</span>
+            </div>
+            <form class="checkout-form" id="checkoutForm">
+              <label>
+                Full name
+                <input type="text" placeholder="Enter your name" required />
+              </label>
+              <label>
+                Address
+                <textarea rows="3" placeholder="Delivery address" required></textarea>
+              </label>
+              <label>
+                State
+                <select required>
+                  <option value="">Select your state</option>
+                  <option>Andhra Pradesh</option>
+                  <option>Assam</option>
+                  <option>Bihar</option>
+                  <option>Delhi</option>
+                  <option>Gujarat</option>
+                  <option>Karnataka</option>
+                  <option>Maharashtra</option>
+                  <option>Punjab</option>
+                  <option>Rajasthan</option>
+                  <option>Tamil Nadu</option>
+                  <option>Telangana</option>
+                  <option>Uttar Pradesh</option>
+                  <option>West Bengal</option>
+                </select>
+              </label>
+              <label>
+                Pincode
+                <input
+                  type="text"
+                  placeholder="Enter pin code"
+                  inputmode="numeric"
+                  pattern="[1-9][0-9]{5}"
+                  maxlength="6"
+                  title="Enter a 6-digit Indian PIN code"
+                  required
+                />
+              </label>
+              <label>
+                Phone
+                <input
+                  type="tel"
+                  placeholder="Enter 10-digit mobile number"
+                  inputmode="numeric"
+                  pattern="[6-9][0-9]{9}"
+                  maxlength="10"
+                  title="Enter a 10-digit Indian mobile number"
+                  required
+                />
+              </label>
+              <div class="summary-box">
+                <strong>Order summary</strong>
+                <div class="summary-list" id="checkoutSummary"></div>
+              </div>
+              <button type="submit" class="btn btn-primary">Continue to payment</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

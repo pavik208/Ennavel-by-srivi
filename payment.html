@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment | Ennavel By Sirvi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-body">
+      <div class="page-shell">
+        <a class="back-link" href="checkout.html">← Back to checkout</a>
+        <div class="payment-card">
+          <img id="paymentImage" class="detail-visual" src="" alt="Selected product" />
+          <div>
+            <p class="eyebrow">Secure payment</p>
+            <h1 id="paymentTitle">Product</h1>
+            <div class="price-row">
+              <span class="price-tag" id="paymentPrice">₹0</span>
+              <span>100% secure</span>
+            </div>
+            <form class="payment-form" id="paymentForm">
+              <label>
+                Card number
+                <input type="text" placeholder="1234 5678 9012 3456" required />
+              </label>
+              <label>
+                Expiry date
+                <input type="text" placeholder="MM/YY" required />
+              </label>
+              <label>
+                CVV
+                <input type="text" placeholder="123" required />
+              </label>
+              <div class="summary-box">
+                <strong>Order summary</strong>
+                <div class="summary-list" id="paymentSummary"></div>
+              </div>
+              <button type="submit" class="btn btn-primary">Send order on WhatsApp</button>
+              <div id="paymentMessage" class="success-box"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
