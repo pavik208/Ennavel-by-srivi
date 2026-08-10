@@ -142,7 +142,11 @@ function attachEventHandlers() {
     document.getElementById('detailPrice').textContent = product.price;
     document.getElementById('detailTag').textContent = product.tag;
     const image = document.getElementById('detailImage');
-    if (image) image.src = product.image;
+    if (image) {
+      image.src = product.image || defaultProduct.image;
+      image.alt = product.title;
+      image.onerror = () => { image.src = defaultProduct.image; };
+    }
 
     const checkoutBtn = document.getElementById('checkoutBtn');
     checkoutBtn?.addEventListener('click', () => {
@@ -161,7 +165,12 @@ function attachEventHandlers() {
     document.getElementById('checkoutPrice').textContent = product.price;
     document.getElementById('checkoutShipping').textContent = formatIndianPrice(shippingCharge);
     document.getElementById('checkoutTotal').textContent = formatIndianPrice(totalAmount);
-    document.getElementById('checkoutImage').src = product.image;
+    const checkoutImg = document.getElementById('checkoutImage');
+    if (checkoutImg) {
+      checkoutImg.src = product.image || defaultProduct.image;
+      checkoutImg.alt = product.title;
+      checkoutImg.onerror = () => { checkoutImg.src = defaultProduct.image; };
+    }
     document.getElementById('checkoutSummary').textContent = `${product.title} • ${product.description}`;
 
     document.getElementById('checkoutForm')?.addEventListener('submit', (event) => {
@@ -196,7 +205,12 @@ function attachEventHandlers() {
 
     document.getElementById('paymentTitle').textContent = product.title;
     document.getElementById('paymentPrice').textContent = product.price;
-    document.getElementById('paymentImage').src = product.image;
+    const payImg = document.getElementById('paymentImage');
+    if (payImg) {
+      payImg.src = product.image || defaultProduct.image;
+      payImg.alt = product.title;
+      payImg.onerror = () => { payImg.src = defaultProduct.image; };
+    }
     document.getElementById('paymentSummary').textContent = `${product.title} • ${product.description}`;
 
     document.getElementById('paymentForm')?.addEventListener('submit', (event) => {
