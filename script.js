@@ -55,6 +55,9 @@ function buildWhatsAppUrl(product, details = {}) {
   if (details.pincode) lines.push(`Pincode: ${details.pincode}`);
   if (details.phone) lines.push(`Phone: ${details.phone}`);
   if (details.size) lines.push(`Size: ${details.size}`);
+  if (details.shippingCharge) lines.push(`Shipping: ₹${details.shippingCharge}`);
+  if (details.totalAmount) lines.push(`Total amount: ₹${details.totalAmount}`);
+  if (details.transactionId) lines.push(`Transaction ID: ${details.transactionId}`);
   if (details.card) lines.push(`Card: ${details.card}`);
   if (details.expiry) lines.push(`Expiry: ${details.expiry}`);
   if (details.cvv) lines.push(`CVV: ${details.cvv}`);
@@ -63,9 +66,26 @@ function buildWhatsAppUrl(product, details = {}) {
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
+function parseIndianPrice(price) {
+  return Number(price.replace(/[^0-9]/g, '')) || 0;
+}
+
+function formatIndianPrice(amount) {
+  return `₹${amount.toLocaleString('en-IN')}`;
+}
+
 function openWhatsAppOrder(product, details = {}) {
   const url = buildWhatsAppUrl(product, details);
   window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+function saveCheckoutOrder(order) {
+  localStorage.setItem('checkoutOrder', JSON.stringify(order));
+}
+
+function loadCheckoutOrder() {
+  const raw = localStorage.getItem('checkoutOrder');
+  return raw ? JSON.parse(raw) : null;
 }
 
 function validateIndianPin(pin) {
@@ -133,8 +153,14 @@ function attachEventHandlers() {
   }
 
   if (page === 'checkout.html') {
+    const shippingCharge = 60;
+    const productAmount = parseIndianPrice(product.price);
+    const totalAmount = productAmount + shippingCharge;
+
     document.getElementById('checkoutTitle').textContent = product.title;
     document.getElementById('checkoutPrice').textContent = product.price;
+    document.getElementById('checkoutShipping').textContent = formatIndianPrice(shippingCharge);
+    document.getElementById('checkoutTotal').textContent = formatIndianPrice(totalAmount);
     document.getElementById('checkoutImage').src = product.image;
     document.getElementById('checkoutSummary').textContent = `${product.title} • ${product.description}`;
 
@@ -158,11 +184,16 @@ function attachEventHandlers() {
         return;
       }
 
-      openWhatsAppOrder(product, { name, address, state, pincode, phone, size });
+      const order = { product, name, address, state, pincode, phone, size, shippingCharge, totalAmount };
+      saveCheckoutOrder(order);
+      localStorage.setItem('checkoutTotal', totalAmount);
+      window.location.href = 'payment.html?test=true';
     });
   }
 
   if (page === 'payment.html') {
+    const totalAmount = localStorage.getItem('checkoutTotal') || '';
+
     document.getElementById('paymentTitle').textContent = product.title;
     document.getElementById('paymentPrice').textContent = product.price;
     document.getElementById('paymentImage').src = product.image;
@@ -170,13 +201,24 @@ function attachEventHandlers() {
 
     document.getElementById('paymentForm')?.addEventListener('submit', (event) => {
       event.preventDefault();
-      const formElement = event.currentTarget;
-      const card = formElement.querySelector('input[placeholder="1234 5678 9012 3456"]')?.value.trim() || '';
-      const expiry = formElement.querySelector('input[placeholder="MM/YY"]')?.value.trim() || '';
-      const cvv = formElement.querySelector('input[placeholder="123"]')?.value.trim() || '';
+      const transactionId = document.getElementById('transactionId')?.value.trim();
+      if (!transactionId) {
+        alert('Please enter the UPI transaction ID.');
+        return;
+      }
 
-      openWhatsAppOrder(product, { card, expiry, cvv });
-      document.getElementById('paymentMessage').textContent = 'Opening WhatsApp with your order details...';
+      const checkoutOrder = loadCheckoutOrder();
+      openWhatsAppOrder(product, {
+        name: checkoutOrder?.name,
+        address: checkoutOrder?.address,
+        state: checkoutOrder?.state,
+        pincode: checkoutOrder?.pincode,
+        phone: checkoutOrder?.phone,
+        size: checkoutOrder?.size,
+        shippingCharge: checkoutOrder?.shippingCharge,
+        totalAmount: checkoutOrder?.totalAmount || totalAmount,
+        transactionId
+      });
     });
   }
 }

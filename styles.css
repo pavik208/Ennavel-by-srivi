@@ -436,6 +436,29 @@ footer {
   color: var(--muted);
 }
 
+.payment-qr {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  margin: 12px 0;
+}
+
+.qr-section {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.qr-help {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 select,
 input,
 textarea {

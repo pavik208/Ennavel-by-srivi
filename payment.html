@@ -23,24 +23,24 @@
               <span>100% secure</span>
             </div>
             <form class="payment-form" id="paymentForm">
+              <div class="qr-section">
+                <strong>Scan UPI QR</strong>
+                <img
+                  id="paymentQr"
+                  class="payment-qr"
+                  src="Image/Scanner.jpeg"
+                  alt="UPI QR code"
+                />
+              </div>
               <label>
-                Card number
-                <input type="text" placeholder="1234 5678 9012 3456" required />
-              </label>
-              <label>
-                Expiry date
-                <input type="text" placeholder="MM/YY" required />
-              </label>
-              <label>
-                CVV
-                <input type="text" placeholder="123" required />
+                Transaction ID
+                <input type="text" id="transactionId" placeholder="Enter UPI transaction ID" required />
               </label>
               <div class="summary-box">
                 <strong>Order summary</strong>
                 <div class="summary-list" id="paymentSummary"></div>
               </div>
-              <button type="submit" class="btn btn-primary">Send order on WhatsApp</button>
-              <div id="paymentMessage" class="success-box"></div>
+              <button type="submit" class="btn btn-primary">Confirm order and send WhatsApp</button>
             </form>
           </div>
         </div>

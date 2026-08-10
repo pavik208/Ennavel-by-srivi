@@ -1,0 +1,11 @@
+{
+  "name": "ennaval-server",
+  "version": "1.0.0",
+  "description": "Static frontend for Ennaval by srivi",
+  "scripts": {
+    "start": "npx http-server . -p 8000 -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
