@@ -181,11 +181,6 @@ function attachEventHandlers() {
         return;
       }
 
-      if (!validateStatePincode(state, pincode)) {
-        alert('The PIN code does not match the selected state. Please enter the correct PIN for your state.');
-        return;
-      }
-
       if (!validateIndianPhone(phone)) {
         alert('Please enter a valid 10-digit Indian mobile number starting with 6-9.');
         return;
