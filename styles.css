@@ -420,6 +420,24 @@ footer {
   color: var(--accent);
 }
 
+/* Payment page: de-emphasize product price, emphasize final total */
+#paymentPrice {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+#paymentShipping {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+#paymentTotal {
+  color: var(--accent);
+  font-weight: 900;
+  font-size: 1.35rem;
+}
+
 .detail-form,
 .checkout-form,
 .payment-form {
