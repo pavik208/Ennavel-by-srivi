@@ -18,6 +18,29 @@ function extractProductFromCard(card) {
   return { title, description, price, tag, image };
 }
 
+function buildProductQuery(product) {
+  const params = new URLSearchParams();
+  params.set('title', product.title);
+  params.set('price', product.price);
+  params.set('description', product.description);
+  params.set('tag', product.tag);
+  params.set('image', product.image);
+  return params.toString();
+}
+
+function parseProductFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('title')) return null;
+
+  return {
+    title: params.get('title') || defaultProduct.title,
+    price: params.get('price') || defaultProduct.price,
+    description: params.get('description') || defaultProduct.description,
+    tag: params.get('tag') || defaultProduct.tag,
+    image: params.get('image') || defaultProduct.image
+  };
+}
+
 function buildWhatsAppUrl(product, details = {}) {
   const lines = [
     'New order from Ennaval by srivi',
@@ -43,52 +66,6 @@ function openWhatsAppOrder(product, details = {}) {
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-const form = document.getElementById('contactForm');
-const message = document.getElementById('formMessage');
-const year = document.getElementById('year');
-
-if (year) {
-  year.textContent = new Date().getFullYear();
-}
-
-if (form && message) {
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const name = data.get('name')?.toString().trim() || 'there';
-
-    message.textContent = `Thanks, ${name}! You're on the list for Ennaval by srivi.`;
-    form.reset();
-  });
-}
-
-document.querySelectorAll('.buy-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const card = btn.closest('.product-card');
-    const product = card ? extractProductFromCard(card) : defaultProduct;
-    localStorage.setItem('selectedProduct', JSON.stringify(product));
-    window.location.href = 'product.html';
-  });
-});
-
-const page = window.location.pathname.split('/').pop();
-
-if (page === 'product.html') {
-  const product = JSON.parse(localStorage.getItem('selectedProduct') || JSON.stringify(defaultProduct));
-  document.getElementById('detailTitle').textContent = product.title;
-  document.getElementById('detailDesc').textContent = product.description;
-  document.getElementById('detailPrice').textContent = product.price;
-  document.getElementById('detailTag').textContent = product.tag;
-  const image = document.getElementById('detailImage');
-  if (image) image.src = product.image;
-
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  checkoutBtn?.addEventListener('click', () => {
-    localStorage.setItem('selectedProduct', JSON.stringify({ ...product, size: document.getElementById('sizeSelect').value }));
-    window.location.href = 'checkout.html';
-  });
-}
-
 function validateIndianPin(pin) {
   return /^[1-9][0-9]{5}$/.test(pin);
 }
@@ -97,53 +74,109 @@ function validateIndianPhone(phone) {
   return /^[6-9][0-9]{9}$/.test(phone);
 }
 
-if (page === 'checkout.html') {
-  const product = JSON.parse(localStorage.getItem('selectedProduct') || JSON.stringify(defaultProduct));
-  document.getElementById('checkoutTitle').textContent = product.title;
-  document.getElementById('checkoutPrice').textContent = product.price;
-  document.getElementById('checkoutImage').src = product.image;
-  document.getElementById('checkoutSummary').textContent = `${product.title} • ${product.description}`;
+function attachEventHandlers() {
+  const form = document.getElementById('contactForm');
+  const message = document.getElementById('formMessage');
+  const year = document.getElementById('year');
 
-  document.getElementById('checkoutForm')?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const name = form.querySelector('input[type="text"]').value.trim();
-    const address = form.querySelector('textarea').value.trim();
-    const state = form.querySelector('select')?.value || '';
-    const pincode = form.querySelector('input[placeholder="Enter pin code"]')?.value.trim() || '';
-    const phone = form.querySelector('input[type="tel"]')?.value.trim() || '';
-    const size = document.getElementById('sizeSelect')?.value || 'M';
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
 
-    if (!validateIndianPin(pincode)) {
-      alert('Please enter a valid 6-digit Indian PIN code.');
-      return;
-    }
+  if (form && message) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const name = data.get('name')?.toString().trim() || 'there';
 
-    if (!validateIndianPhone(phone)) {
-      alert('Please enter a valid 10-digit Indian mobile number starting with 6-9.');
-      return;
-    }
+      message.textContent = `Thanks, ${name}! You're on the list for Ennaval by srivi.`;
+      form.reset();
+    });
+  }
 
-    openWhatsAppOrder(product, { name, address, state, pincode, phone, size });
+  document.querySelectorAll('.buy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.product-card');
+      const product = card ? extractProductFromCard(card) : defaultProduct;
+      const productQuery = buildProductQuery(product);
+      localStorage.setItem('selectedProduct', JSON.stringify(product));
+      window.location.href = `product.html?${productQuery}`;
+    });
   });
+
+  const queryProduct = parseProductFromQuery();
+  const storedProduct = JSON.parse(localStorage.getItem('selectedProduct') || JSON.stringify(defaultProduct));
+  const product = queryProduct || storedProduct;
+
+  if (queryProduct) {
+    localStorage.setItem('selectedProduct', JSON.stringify(product));
+  }
+
+  const page = window.location.pathname.split('/').pop();
+
+  if (page === 'product.html') {
+    document.getElementById('detailTitle').textContent = product.title;
+    document.getElementById('detailDesc').textContent = product.description;
+    document.getElementById('detailPrice').textContent = product.price;
+    document.getElementById('detailTag').textContent = product.tag;
+    const image = document.getElementById('detailImage');
+    if (image) image.src = product.image;
+
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    checkoutBtn?.addEventListener('click', () => {
+      const size = document.getElementById('sizeSelect')?.value || 'M';
+      localStorage.setItem('selectedProduct', JSON.stringify({ ...product, size }));
+      window.location.href = 'checkout.html';
+    });
+  }
+
+  if (page === 'checkout.html') {
+    document.getElementById('checkoutTitle').textContent = product.title;
+    document.getElementById('checkoutPrice').textContent = product.price;
+    document.getElementById('checkoutImage').src = product.image;
+    document.getElementById('checkoutSummary').textContent = `${product.title} • ${product.description}`;
+
+    document.getElementById('checkoutForm')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formElement = event.currentTarget;
+      const name = formElement.querySelector('input[type="text"]').value.trim();
+      const address = formElement.querySelector('textarea').value.trim();
+      const state = formElement.querySelector('select')?.value || '';
+      const pincode = formElement.querySelector('input[placeholder="Enter pin code"]')?.value.trim() || '';
+      const phone = formElement.querySelector('input[type="tel"]')?.value.trim() || '';
+      const size = document.getElementById('sizeSelect')?.value || 'M';
+
+      if (!validateIndianPin(pincode)) {
+        alert('Please enter a valid 6-digit Indian PIN code.');
+        return;
+      }
+
+      if (!validateIndianPhone(phone)) {
+        alert('Please enter a valid 10-digit Indian mobile number starting with 6-9.');
+        return;
+      }
+
+      openWhatsAppOrder(product, { name, address, state, pincode, phone, size });
+    });
+  }
+
+  if (page === 'payment.html') {
+    document.getElementById('paymentTitle').textContent = product.title;
+    document.getElementById('paymentPrice').textContent = product.price;
+    document.getElementById('paymentImage').src = product.image;
+    document.getElementById('paymentSummary').textContent = `${product.title} • ${product.description}`;
+
+    document.getElementById('paymentForm')?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formElement = event.currentTarget;
+      const card = formElement.querySelector('input[placeholder="1234 5678 9012 3456"]')?.value.trim() || '';
+      const expiry = formElement.querySelector('input[placeholder="MM/YY"]')?.value.trim() || '';
+      const cvv = formElement.querySelector('input[placeholder="123"]')?.value.trim() || '';
+
+      openWhatsAppOrder(product, { card, expiry, cvv });
+      document.getElementById('paymentMessage').textContent = 'Opening WhatsApp with your order details...';
+    });
+  }
 }
 
-if (page === 'payment.html') {
-  const product = JSON.parse(localStorage.getItem('selectedProduct') || JSON.stringify(defaultProduct));
-  document.getElementById('paymentTitle').textContent = product.title;
-  document.getElementById('paymentPrice').textContent = product.price;
-  document.getElementById('paymentImage').src = product.image;
-  document.getElementById('paymentSummary').textContent = `${product.title} • ${product.description}`;
-
-  document.getElementById('paymentForm')?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const inputs = form.querySelectorAll('input[type="text"]');
-    const card = inputs[0]?.value.trim() || '';
-    const expiry = inputs[1]?.value.trim() || '';
-    const cvv = inputs[2]?.value.trim() || '';
-
-    openWhatsAppOrder(product, { card, expiry, cvv });
-    document.getElementById('paymentMessage').textContent = 'Opening WhatsApp with your order details...';
-  });
-}
+document.addEventListener('DOMContentLoaded', attachEventHandlers);
