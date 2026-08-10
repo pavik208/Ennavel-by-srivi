@@ -76,34 +76,6 @@ function validateIndianPhone(phone) {
   return /^[6-9][0-9]{9}$/.test(phone);
 }
 
-function getStatePinPrefixes(state) {
-  const mapping = {
-    'Andhra Pradesh': ['50', '51', '52', '53'],
-    'Assam': ['78'],
-    'Bihar': ['80', '81', '82', '83', '84', '85'],
-    'Delhi': ['11'],
-    'Gujarat': ['36', '37', '38', '39'],
-    'Karnataka': ['56', '57', '58'],
-    'Maharashtra': ['40', '41', '42', '43', '44'],
-    'Punjab': ['14', '15', '16'],
-    'Rajasthan': ['30', '31', '32', '33'],
-    'Tamil Nadu': ['60', '61', '62', '63'],
-    'Telangana': ['50', '51', '52', '53', '54', '55', '56', '57', '58', '59'],
-    'Uttar Pradesh': ['20', '21', '22', '23', '24', '25', '26', '27', '28'],
-    'West Bengal': ['70', '71', '72', '73', '74']
-  };
-
-  return mapping[state] || null;
-}
-
-function validateStatePincode(state, pincode) {
-  if (!state || !pincode) return true;
-  const prefixes = getStatePinPrefixes(state);
-  if (!prefixes) return true;
-
-  return prefixes.includes(pincode.substring(0, 2));
-}
-
 function attachEventHandlers() {
   const form = document.getElementById('contactForm');
   const message = document.getElementById('formMessage');
